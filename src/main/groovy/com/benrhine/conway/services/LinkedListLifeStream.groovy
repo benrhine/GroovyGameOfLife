@@ -13,38 +13,19 @@ import groovy.transform.CompileStatic
  * @author Ben Rhine
  */
 @CompileStatic
-class LinkedListLifeStream  extends LifeStream {
+class LinkedListLifeStream extends LifeStream {
 
-    private Long generation = 0
-    private CytoFate fate
     protected final LinkedList<CytoGrid> history
 
-    private CytoGrid initialState
-
     LinkedListLifeStream(final CytoFate fate) {
-        this.fate  = fate ?: null
+        super(fate)
         this.history = new LinkedList<CytoGrid>()
     }
 
-    /**
-     * Initialize the LifeMachine with the provide grid.
-     *
-     * @param cellGrid
-     * @return
-     */
-    void initialize(final CytoGrid cellGrid ) {
-        initialState = cellGrid
-        reset()
-    }
-
     void reset() {
+        super.reset()
         history.clear()
-        generation = 0
         history.add(initialState)
-    }
-
-    final Long getGeneration() {
-        this.generation
     }
 
     /**
@@ -82,23 +63,6 @@ class LinkedListLifeStream  extends LifeStream {
             }
         }
         history.last()
-    }
-
-    /**
-     * Transitions the given {@CellGrid} to it's next state using the {@CytoFate}.
-     * @param grid
-     * @return
-     */
-    private CytoGrid transition(final CytoGrid grid ) {
-        final CytoGrid next = new CytoGrid( grid.rows, grid.cols )
-
-        for( int row = 0; row < grid.rows; row++ ) {
-            for( int col = 0; col < grid.cols; col++ ) {
-                next.put( row, col, fate.nextState( grid, row, col ) )
-            }
-        }
-
-        next // return
     }
 }
 

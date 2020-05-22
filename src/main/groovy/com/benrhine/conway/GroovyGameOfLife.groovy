@@ -3,10 +3,11 @@ package com.benrhine.conway
 import com.benrhine.conway.core.CytoGrid
 import com.benrhine.conway.core.CytoGridFactory
 import com.benrhine.conway.services.ArrayListLifeStream
+import com.benrhine.conway.services.LifeStream
 import com.benrhine.conway.services.LinkedListLifeStream
 import com.benrhine.conway.services.CytoFate
+import com.benrhine.conway.utils.StrUtils
 import org.apache.commons.cli.DefaultParser
-import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Options
 
 import static java.lang.System.exit
@@ -42,7 +43,7 @@ class GroovyGameOfLife {
 
         } else {
             System.err.println( "You must specify either --randomize or --file options" )
-            printUsage( opts )
+            StrUtils.printUsage( opts )
             exit(0)
             return
         }
@@ -51,96 +52,47 @@ class GroovyGameOfLife {
 
         if (listType.equalsIgnoreCase("array")) {
             println("Using ArrayList for life stream ...")
-            final ArrayListLifeStream life = new ArrayListLifeStream(fate)
-            life.initialize(initialGrid)
 
-            printIteration('Initial Population: Iteration ', initialGrid, 0)
-
-            CytoGrid current
-            CytoGrid previous = initialGrid
-
-            for (int i = 0; i < generations; i++) {
-
-                current = life.forward()
-
-                printIteration('Generation', current, life.generation)
-
-                // Extinction occurs when a grid is produce with no life.
-                if (!current.values().contains(true)) {
-                    println "\n\nExtinction occurred at generation ${life.generation}. No more life is possible.\n\n"
-                    break
-                }
-
-                // Uptopia occurs when cells align in a way that their state will never change.  This is usually represented
-                // by ring formations, where the cell(s) in the center will never have enough neighbors and the ring cells
-                // always have two.
-                if (current == previous) {
-                    println "\n\nUtopia occurred at generation ${life.generation - 1}.  All living cells will live forever, and no more new cells can come to life."
-                    break
-                }
-                previous = current
-            }
+            lifeCycle(new ArrayListLifeStream(fate), initialGrid, generations)
 
         } else {
+            println("Using LinkedList for life stream ...")
 
-            final LinkedListLifeStream life = new LinkedListLifeStream(fate)
-            life.initialize(initialGrid)
-
-            printIteration('Initial Population: Iteration ', initialGrid, 0)
-
-            CytoGrid current
-            CytoGrid previous = initialGrid
-
-            for (int i = 0; i < generations; i++) {
-
-                current = life.forward()
-
-                printIteration('Generation', current, life.generation)
-
-                // Extinction occurs when a grid is produce with no life.
-                if (!current.values().contains(true)) {
-                    println "\n\nExtinction occurred at generation ${life.generation}. No more life is possible.\n\n"
-                    break
-                }
-
-                // Uptopia occurs when cells align in a way that their state will never change.  This is usually represented
-                // by ring formations, where the cell(s) in the center will never have enough neighbors and the ring cells
-                // always have two.
-                if (current == previous) {
-                    println "\n\nUtopia occurred at generation ${life.generation - 1}.  All living cells will live forever, and no more new cells can come to life."
-                    break
-                }
-                previous = current
-            }
+            lifeCycle(new LinkedListLifeStream(fate), initialGrid, generations)
         }
 
-        printGameSummary(startTime, generations)
+        StrUtils.printGameSummary(startTime, generations)
     }
 
-    /**
-     * Print the cell grid.
-     *
-     * @param grid
-     * @param generation
-     * @return
-     */
-    private static void printIteration(final String title, final CytoGrid grid, final Long generation ) {
-        println "${title} ${generation}" + "\n" + "-----------------" + "\n" + grid + "\n"
-    }
+    static void lifeCycle(final LifeStream life, final CytoGrid initialGrid, final Integer generations) {
+        life.initialize(initialGrid)
 
+        StrUtils.printIteration('Initial Population: Iteration ', initialGrid, 0)
 
-    private static void printUsage(final Options opts ) {
-        new HelpFormatter().printHelp( "java -jar game-of-life.jar", opts )
-    }
+        CytoGrid current
+        CytoGrid previous = initialGrid
 
-    private static void printGameSummary(final long startTime, final int generations) {
-        final Date endDate = new Date()
-        final long endTime = endDate.getTime()
-        final long runTime = endTime - startTime
+        for (int i = 0; i < generations; i++) {
 
-        println("Started Game of life at: " + startTime.toString())
-        println("Completing Game of life at: " + endTime.toString())
-        println("Game of life took " + runTime.toString() + " millis to complete for " + generations.toString() + " generations.")
+            current = life.forward()
+
+            StrUtils.printIteration('Generation', current, life.generation)
+
+            // Extinction occurs when a grid is produce with no life.
+            if (!current.values().contains(true)) {
+                println "\n\nExtinction occurred at generation ${life.generation}. No more life is possible.\n\n"
+                break
+            }
+
+            // Uptopia occurs when cells align in a way that their state will never change.  This is usually represented
+            // by ring formations, where the cell(s) in the center will never have enough neighbors and the ring cells
+            // always have two.
+            if (current == previous) {
+                println "\n\nUtopia occurred at generation ${life.generation - 1}.  All living cells will live forever, and no more new cells can come to life."
+                break
+            }
+            previous = current
+        }
     }
 
 }
