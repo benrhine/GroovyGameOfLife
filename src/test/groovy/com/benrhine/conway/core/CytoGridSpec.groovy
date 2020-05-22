@@ -4,16 +4,12 @@ import com.benrhine.conway.util.ConwaySpecification
 
 class CytoGridSpec extends ConwaySpecification {
 
-    def setup() {
-
-    }
-
-    def "a CytoGrid's state is initialized with the correct number of rows and cols"() {
+    void "a CytoGrid's state is initialized with the correct number of rows and cols"() {
 
         when: ""
             final grid = new CytoGrid( rows, cols )
         then: ""
-            grid.columns == cols
+            grid.cols == cols
             grid.rows == rows
 
             grid.rowKeyList().size() == rows

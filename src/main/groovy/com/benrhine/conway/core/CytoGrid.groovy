@@ -4,36 +4,47 @@ import com.google.common.collect.ArrayTable
 import groovy.transform.CompileStatic
 import groovy.transform.EqualsAndHashCode
 
-//@CompileStatic
+/**
+ *
+ * Grid representation of cell. There are two types of cells ALIVE represented by 0 and DEAD represented by .
+ *
+ * @author Ben Rhine
+ */
+@CompileStatic
 @EqualsAndHashCode
 class CytoGrid {
-    static final String ALIVE_CHAR     = "O"
-    static final String NOT_ALIVE_CHAR = "."
+    static final String ALIVE = "O"
+    static final String DEAD = "."
 
-    @Delegate final ArrayTable<Integer, Integer, Boolean> state
-    final rows
-    final columns
+    final Integer rows
+    final Integer cols
+    final @Delegate ArrayTable<Integer, Integer, Boolean> state
 
-    CytoGrid(final rows, final columns) {
+    CytoGrid(Integer rows, Integer columns ) {
         if(rows && rows > 0 && columns && columns > 0) {
             this.rows = rows
-            this.columns = columns
+            this.cols = columns
 
             state = ArrayTable.create( (0..(rows-1)), (0..(columns-1)) )
         } else {
             println 'Invalid rows and columns'
         }
-
     }
 
-    def exists( final row, final columns ) {
-        row >= 0 && row < this.rows && columns >= 0 && columns < this.columns  // return boolean
+    /**
+     * Determines if the specified cell coordinates exist in this grid.
+     * @param row
+     * @param col
+     * @return
+     */
+    final Boolean exists( int row, int col ) {
+        row >= 0 && row < rows && col >= 0 && col < cols
     }
 
     @Override
-    String toString() {
+    final String toString() {
         state.rowMap().collect{ row ->
-            row.value.collect{ col -> col.value ? ALIVE_CHAR : NOT_ALIVE_CHAR }.join("")
+            row.value.collect{ col -> col.value ? ALIVE : DEAD }.join("")
         }.join( "\n" )
     }
 }
