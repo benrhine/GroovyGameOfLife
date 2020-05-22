@@ -5,9 +5,9 @@ This is a implementation of [Conway's Game of Life](https://en.wikipedia.org/wik
 Given a grid of both living and dead cells, cells will die and come to life as the game progresses through generations
 based on some basic rules:
 
-1. Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+1. Any live cell with less than two live neighbours dies, as if caused by under-population.
 2. Any live cell with two or three live neighbours lives on to the next generation.
-3. Any live cell with more than three live neighbours dies, as if by overcrowding.
+3. Any live cell with greater than three live neighbours dies, as if by overcrowding.
 4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
 The game can be seeded with randomly generated cells of a given size, or load an initial cell from any text file.
