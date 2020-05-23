@@ -73,3 +73,5 @@ To cycle through 100 generations of a randomly seeded 50x50 grid, use the follow
 ```
 java -jar build/libs/GroovyGameOfLife-1.0-SNAPSHOT-all.jar --randomize 50x50 --generations 100 -l array
 ```
+
+Note: To see the Java of Life written in Java 8 (which is based on this Groovy implementation) see my implementation [here](https://github.com/benrhine/JavaGameOfLife/blob/master/README.md)

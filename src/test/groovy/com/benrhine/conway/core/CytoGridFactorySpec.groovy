@@ -33,7 +33,7 @@ class CytoGridFactorySpec extends ConwaySpecification {
         where:
             stringValue                 | expectedValues
             "..O.\nOOOO\n...."          | [[false,false,true,false],[true,true,true,true]  ,[false,false,false,false]]
-            "..O.\nOO\n...."            | [[false,false,true,false],[true,true,false,false],[false,false,false,false]]
+            "..O.\nOO..\n...."            | [[false,false,true,false],[true,true,false,false],[false,false,false,false]]
             ".OO.\nOO..\nO.O.\nOOOO"    | [[false,true,true,false] ,[true,true,false,false],[true,false,true,false],[true,true,true,true]]
     }
 
